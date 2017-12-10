@@ -2,8 +2,8 @@
 //  SpeechDetectionViewController.swift
 //  Speech-Recognition-Demo
 //
-//  Created by Jennifer A Sipila on 3/3/17.
-//  Copyright © 2017 Jennifer A Sipila. All rights reserved.
+//  Created by urmum on 3/3/17.
+//  Copyright © 2017 Team. All rights reserved.
 //
 
 import UIKit
@@ -14,6 +14,11 @@ class SpeechDetectionViewController: UIViewController, SFSpeechRecognizerDelegat
     @IBOutlet weak var detectedTextLabel: UILabel!
     @IBOutlet weak var colorView: UIView!
     @IBOutlet weak var startButton: UIButton!
+    @IBOutlet weak var wordToSay: UILabel!
+    @IBOutlet weak var pronounciationLabel: UILabel!
+    var wordChosen = "test"
+    var pronounceChosen = "test"
+    var randomNum = 0
     
     let audioEngine = AVAudioEngine()
     let speechRecognizer: SFSpeechRecognizer? = SFSpeechRecognizer()
@@ -23,23 +28,33 @@ class SpeechDetectionViewController: UIViewController, SFSpeechRecognizerDelegat
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        randomNum = randomValue(lowestVal: 0, highestVal: 4)
+        wordChosen = setWord(num: randomNum)
+        pronounceChosen = setPronounce(num: randomNum)
+        wordToSay.text = wordChosen
+        pronounciationLabel.text = pronounceChosen
+        
         self.requestSpeechAuthorization()
     }
     
 //MARK: IBActions and Cancel
-    
-    @IBAction func startButtonTapped(_ sender: UIButton) {
-        if isRecording == true {
-            audioEngine.stop()
-            recognitionTask?.cancel()
-            isRecording = false
-            startButton.backgroundColor = UIColor.gray
-        } else {
-            self.recordAndRecognizeSpeech()
-            isRecording = true
-            startButton.backgroundColor = UIColor.red
-        }
+    @IBAction func touchDown(_ sender: AnyObject) {
+        self.recordAndRecognizeSpeech()
+        startButton.backgroundColor = UIColor.red
     }
+    
+    @IBAction func touchUpInside(_ sender: AnyObject) {
+        request.endAudio() // Added line to mark end of recording
+        audioEngine.stop()
+        
+        if let node = audioEngine.inputNode {
+            node.removeTap(onBus: 0)
+        }
+        recognitionTask?.cancel()
+        
+        startButton.backgroundColor = UIColor.gray
+    }
+
     
     func cancelRecording() {
         audioEngine.stop()
@@ -73,22 +88,25 @@ class SpeechDetectionViewController: UIViewController, SFSpeechRecognizerDelegat
             // Recognizer is not available right now
             return
         }
-        recognitionTask = speechRecognizer?.recognitionTask(with: request, resultHandler: { result, error in
-            if let result = result {
-                
-                let bestString = result.bestTranscription.formattedString
-                self.detectedTextLabel.text = bestString
-                
-                var lastString: String = ""
-                for segment in result.bestTranscription.segments {
-                    let indexTo = bestString.index(bestString.startIndex, offsetBy: segment.substringRange.location)
-                    lastString = bestString.substring(from: indexTo)
+        recognitionTask = speechRecognizer?.recognitionTask(with: request, resultHandler: { (result, error) in
+            if result != nil { // check to see if result is empty (i.e. no speech found)
+                if let result = result {
+                    let bestString = result.bestTranscription.formattedString
+                    self.detectedTextLabel.text = bestString
+                    
+                    var lastString: String = ""
+                    for segment in result.bestTranscription.segments {
+                        let indexTo = bestString.index(bestString.startIndex, offsetBy: segment.substringRange.location)
+                        lastString = bestString.substring(from: indexTo)
+                    }
+                    self.checkForColorsSaid(resultString: lastString)
+                    
+                } else if let error = error {
+                    self.sendAlert(message: "There has been a speech recognition error")
+                    print(error)
                 }
-                self.checkForColorsSaid(resultString: lastString)
-            } else if let error = error {
-                self.sendAlert(message: "There has been a speech recognition error.")
-                print(error)
             }
+            
         })
     }
     
@@ -118,26 +136,22 @@ func requestSpeechAuthorization() {
     
     func checkForColorsSaid(resultString: String) {
         switch resultString {
-        case "red":
-            colorView.backgroundColor = UIColor.red
-        case "orange":
-            colorView.backgroundColor = UIColor.orange
-        case "yellow":
-            colorView.backgroundColor = UIColor.yellow
-        case "green":
+        case wordChosen:
             colorView.backgroundColor = UIColor.green
-        case "blue":
-            colorView.backgroundColor = UIColor.blue
-        case "purple":
-            colorView.backgroundColor = UIColor.purple
-        case "black":
-            colorView.backgroundColor = UIColor.black
-        case "white":
-            colorView.backgroundColor = UIColor.white
-        case "gray":
-            colorView.backgroundColor = UIColor.gray
-        default: break
+        default: colorView.backgroundColor = UIColor.red
+            
         }
+    }
+    
+    func setWord(num: Int) -> String{
+        var wordList = ["Dog", "Cat", "Fish", "Gorilla", "Chinchilla"]
+        return wordList[num]
+    
+    }
+    
+    func setPronounce(num:Int) -> String{
+        var pronounceList = ["/dôɡ/", "/kat/", "/fiSH/", "/ɡəˈrilə/", "/CHinˈCHilə/"]
+        return pronounceList[num]
     }
     
 //MARK: - Alert
@@ -146,5 +160,11 @@ func requestSpeechAuthorization() {
         let alert = UIAlertController(title: "Speech Recognizer Error", message: message, preferredStyle: UIAlertControllerStyle.alert)
         alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
         self.present(alert, animated: true, completion: nil)
+    }
+    
+    func randomValue(lowestVal: Int, highestVal: Int) -> Int {
+        //SELECTS A RANDOM VALUE WITH GIVEN RANGE
+        let result = Int(arc4random_uniform(UInt32(highestVal - lowestVal + 1))) + lowestVal
+        return result
     }
 }
