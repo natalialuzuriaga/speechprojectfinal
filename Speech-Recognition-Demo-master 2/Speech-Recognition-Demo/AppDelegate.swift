@@ -2,8 +2,8 @@
 //  AppDelegate.swift
 //  Speech-Recognition-Demo
 //
-//  Created by Jennifer A Sipila on 3/2/17.
-//  Copyright © 2017 Jennifer A Sipila. All rights reserved.
+//  Created by Natalia Luzuriaga
+//  Copyright © 2017
 //
 
 import UIKit

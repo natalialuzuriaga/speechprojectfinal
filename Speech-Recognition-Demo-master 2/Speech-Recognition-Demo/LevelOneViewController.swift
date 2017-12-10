@@ -2,7 +2,7 @@
 //  SpeechDetectionViewController.swift
 //  Speech-Recognition-Demo
 //
-//  Created by urmum on 3/3/17.
+//  Created by Natalia Luzuriaga
 //  Copyright © 2017 Team. All rights reserved.
 //
 
