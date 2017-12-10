@@ -2,8 +2,9 @@
 //  LevelSelectViewController.swift
 //  Speech-Recognition-Demo
 //
-//  Created by Natalia Luzuriaga on 12/10/17.
-//  Copyright © 2017 Jennifer A Sipila. All rights reserved.
+//  Created by Natalia Luzuriaga
+//  Copyright © 2017 Team. All rights reserved.
+
 //
 
 import UIKit
