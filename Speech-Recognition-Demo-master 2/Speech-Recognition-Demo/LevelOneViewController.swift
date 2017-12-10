@@ -9,16 +9,18 @@
 import UIKit
 import Speech
 
-class SpeechDetectionViewController: UIViewController, SFSpeechRecognizerDelegate {
+class LevelOneViewController: UIViewController, SFSpeechRecognizerDelegate {
 
     @IBOutlet weak var detectedTextLabel: UILabel!
     @IBOutlet weak var colorView: UIView!
     @IBOutlet weak var startButton: UIButton!
     @IBOutlet weak var wordToSay: UILabel!
     @IBOutlet weak var pronounciationLabel: UILabel!
+    @IBOutlet weak var buttonBackground: CircleButton!
     var wordChosen = "test"
     var pronounceChosen = "test"
     var randomNum = 0
+    var x = 1
     
     let audioEngine = AVAudioEngine()
     let speechRecognizer: SFSpeechRecognizer? = SFSpeechRecognizer()
@@ -32,19 +34,12 @@ class SpeechDetectionViewController: UIViewController, SFSpeechRecognizerDelegat
         self.requestSpeechAuthorization()
     }
     
-    func setWord(){
-        //selects random word from arrays and displays it in labels
-        randomNum = randomValue(lowestVal: 0, highestVal: 4)
-        wordChosen = randomWord(num: randomNum)
-        pronounceChosen = setPronounce(num: randomNum)
-        wordToSay.text = wordChosen
-        pronounciationLabel.text = pronounceChosen
-    }
+
     
 //MARK: IBActions and Cancel
     @IBAction func touchDown(_ sender: AnyObject) {
         self.recordAndRecognizeSpeech()
-        startButton.backgroundColor = UIColor.red
+        buttonBackground.backgroundColor = UIColor.red
     }
     
     @IBAction func touchUpInside(_ sender: AnyObject) {
@@ -56,7 +51,7 @@ class SpeechDetectionViewController: UIViewController, SFSpeechRecognizerDelegat
         }
         recognitionTask?.cancel()
         
-        startButton.backgroundColor = UIColor.gray
+        buttonBackground.backgroundColor = UIColor.gray
     }
 
     
@@ -103,7 +98,7 @@ class SpeechDetectionViewController: UIViewController, SFSpeechRecognizerDelegat
                         let indexTo = bestString.index(bestString.startIndex, offsetBy: segment.substringRange.location)
                         lastString = bestString.substring(from: indexTo)
                     }
-                    self.checkForColorsSaid(resultString: lastString)
+                    self.checkForWordSaid(resultString: lastString)
                     
                 } else if let error = error {
                     self.sendAlert(message: "There has been a speech recognition error")
@@ -138,28 +133,36 @@ func requestSpeechAuthorization() {
     
 //MARK: - UI / Set view color.
     
-    func checkForColorsSaid(resultString: String) {
-        switch resultString {
-        case wordChosen:
+    func checkForWordSaid(resultString: String) {
+        if resultString == wordChosen {
             colorView.backgroundColor = UIColor.green
-            sleep(1)
-            self.setWord()
-            print("k")
-        default: colorView.backgroundColor = UIColor.red
             
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0, execute: {
+                self.setWord()
+                self.detectedTextLabel.text = ""
+                self.colorView.backgroundColor = UIColor.gray
+            })
         }
+        if resultString != wordChosen {
+            colorView.backgroundColor = UIColor.red
+        }
+//        switch resultString {
+//        case wordChosen:
+//                    default:
+//        }
     }
     
     func randomWord(num: Int) -> String{
         //parameter is the random value -> will set to a random word
-        var wordList = ["Dog", "Cat", "Fish", "Gorilla", "Chinchilla"]
+        var wordList = ["Dog", "Cat", "Fish", "Snake", "Worm", "Frog", "Bird", "Toad", "Hen"
+        , "Goat", "Sheep", "Seal", "Bear", "Ape", "Shrimp", "Skunk", "Mouse", "Rat", "Duck", "Wolf"]
         return wordList[num]
     
     }
     
     func setPronounce(num:Int) -> String{
         //parameter is the random value -> will set word
-        var pronounceList = ["/dôɡ/", "/kat/", "/fiSH/", "/ɡəˈrilə/", "/CHinˈCHilə/"]
+        var pronounceList = ["/dôɡ/", "/kat/", "/fiSH/", "/snāk/", "/wərm/", "/frôɡ,fräɡ/", "/bərd/", "/tōd/", "/hen/", "/ɡōt/", "/SHēp/", "/ˈsē(ə)l/", "/ber/",  "/āp/", "/SHrimp/", "/skəNGk/", "/mous/", "/rat/", "/dək/", "/wo͝olf/"]
         return pronounceList[num]
     }
     
@@ -175,5 +178,13 @@ func requestSpeechAuthorization() {
         //SELECTS A RANDOM VALUE WITH GIVEN RANGE
         let result = Int(arc4random_uniform(UInt32(highestVal - lowestVal + 1))) + lowestVal
         return result
+    }
+    func setWord(){
+        //selects random word from arrays and displays it in labels
+        randomNum = randomValue(lowestVal: 0, highestVal: 19)
+        wordChosen = randomWord(num: randomNum)
+        pronounceChosen = setPronounce(num: randomNum)
+        wordToSay.text = wordChosen
+        pronounciationLabel.text = pronounceChosen
     }
 }
