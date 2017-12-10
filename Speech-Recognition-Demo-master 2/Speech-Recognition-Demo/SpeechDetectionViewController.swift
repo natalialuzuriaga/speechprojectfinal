@@ -28,13 +28,17 @@ class SpeechDetectionViewController: UIViewController, SFSpeechRecognizerDelegat
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setWord()
+        self.requestSpeechAuthorization()
+    }
+    
+    func setWord(){
+        //selects random word from arrays and displays it in labels
         randomNum = randomValue(lowestVal: 0, highestVal: 4)
-        wordChosen = setWord(num: randomNum)
+        wordChosen = randomWord(num: randomNum)
         pronounceChosen = setPronounce(num: randomNum)
         wordToSay.text = wordChosen
         pronounciationLabel.text = pronounceChosen
-        
-        self.requestSpeechAuthorization()
     }
     
 //MARK: IBActions and Cancel
@@ -138,18 +142,23 @@ func requestSpeechAuthorization() {
         switch resultString {
         case wordChosen:
             colorView.backgroundColor = UIColor.green
+            sleep(1)
+            self.setWord()
+            print("k")
         default: colorView.backgroundColor = UIColor.red
             
         }
     }
     
-    func setWord(num: Int) -> String{
+    func randomWord(num: Int) -> String{
+        //parameter is the random value -> will set to a random word
         var wordList = ["Dog", "Cat", "Fish", "Gorilla", "Chinchilla"]
         return wordList[num]
     
     }
     
     func setPronounce(num:Int) -> String{
+        //parameter is the random value -> will set word
         var pronounceList = ["/dôɡ/", "/kat/", "/fiSH/", "/ɡəˈrilə/", "/CHinˈCHilə/"]
         return pronounceList[num]
     }
