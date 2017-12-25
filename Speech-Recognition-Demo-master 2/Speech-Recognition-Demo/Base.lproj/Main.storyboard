@@ -216,7 +216,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1584.375" y="-604.22535211267609"/>
+            <point key="canvasLocation" x="1573" y="-663"/>
         </scene>
         <!--Level Two View Controller-->
         <scene sceneID="a7c-kK-rIn">
@@ -405,12 +405,11 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="13K-HK-0lb" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1222.5" y="182.74647887323943"/>
+            <point key="canvasLocation" x="388" y="372"/>
         </scene>
         <!--Level Select View Controller-->
         <scene sceneID="IyC-Rl-5iA">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="018-dz-ic4" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController id="YcB-Dx-nRX" customClass="LevelSelectViewController" customModule="Speech_Recognition_Demo" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Mmj-Jr-v0b"/>
@@ -551,8 +550,9 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="018-dz-ic4" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="315" y="-451"/>
+            <point key="canvasLocation" x="388" y="-663"/>
         </scene>
     </scenes>
     <resources>
@@ -561,6 +561,6 @@
         <image name="right-triangle-png-image-80170" width="512" height="512"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="7qY-lc-2Og"/>
+        <segue reference="WfG-FQ-Gdr"/>
     </inferredMetricsTieBreakers>
 </document>

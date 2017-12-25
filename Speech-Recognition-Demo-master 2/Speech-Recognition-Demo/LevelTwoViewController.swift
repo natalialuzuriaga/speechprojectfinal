@@ -151,7 +151,7 @@ class LevelTwoViewController: UIViewController, SFSpeechRecognizerDelegate {
     func randomWord(num: Int) -> String{
         //parameter is the random value -> will set to a random word
         var wordList = ["Burrito", "Taco", "Pizza", "Burger", "Apple", "Banana", "Pineapple", "Broccoli", "Carrot"
-            , "Kiwi", "Mango", "Sandwich", "Orange", "Rasbperry", "Chocolate", "Nachos", "Waffles", "Pancakes", "Salad", "Zucchini"]
+            , "Kiwi", "Mango", "Sandwich", "Orange", "Raspberry", "Chocolate", "Nachos", "Waffles", "Pancakes", "Salad", "Zucchini"]
         return wordList[num]
         
     }
